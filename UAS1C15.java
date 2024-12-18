@@ -1,4 +1,5 @@
 import java.util.Scanner;
+
 public class UAS1C15 {
     static Scanner input = new Scanner(System.in);
     static int jumlahTim15 = (68 % 3) + 4; 
@@ -42,10 +43,12 @@ public class UAS1C15 {
     static void inputDataSkor15() {
         for (int i = 0; i < jumlahTim15; i++) {
             System.out.print("\nMasukkan nama tim ke-" + (i + 1) + ": ");
-            namaTim15[i] = input.nextLine();
+            namaTim15[i] = input.nextLine(); 
+
             for (int j = 0; j < 2; j++) {
-                skorTim15[i][j] = masukkanSkor(namaTim15[i], j + 1);
+                skorTim15[i][j] = masukkanSkor(namaTim15[i], j + 1); 
             }
+
             totalSkor15[i] = skorTim15[i][0] + skorTim15[i][1];
         }
     }
@@ -80,24 +83,31 @@ public class UAS1C15 {
         System.out.println("\nTabel Skor Turnamen");
         System.out.println("Nama Tim   Level 1   Level 2   Total Skor");
         System.out.println("------------------------------------------");
-    
-        for (int i = 0; i < jumlahTim15; i++) {
-            String baris = formatKolom(namaTim15[i], 10) + 
-                           formatKolom(String.valueOf(skorTim15[i][0]), 8) + 
-                           formatKolom(String.valueOf(skorTim15[i][1]), 8) + 
-                           formatKolom(String.valueOf(totalSkor15[i]), 12);
-            System.out.println(baris);
-        }
-    }
 
-    static String formatKolom(String teks, int lebar) {
-        if (teks.length() > lebar) {
-            return teks.substring(0, lebar - 1) + " ";
+        for (int i = 0; i < jumlahTim15; i++) {
+            String baris = namaTim15[i];
+            
+            while (baris.length() < 10) {
+                baris += " "; 
+            }
+
+            baris += skorTim15[i][0];
+            while (String.valueOf(skorTim15[i][0]).length() < 8) {
+                baris += " ";
+            }
+
+            baris += skorTim15[i][1];
+            while (String.valueOf(skorTim15[i][1]).length() < 8) {
+                baris += " "; 
+            }
+
+            baris += totalSkor15[i];
+            while (String.valueOf(totalSkor15[i]).length() < 12) {
+                baris += " "; 
+            }
+
+            System.out.println(baris); 
         }
-        while (teks.length() < lebar) {
-            teks += " "; 
-        }
-        return teks;
     }
 
     static void tentukanJuara15() {
@@ -114,7 +124,6 @@ public class UAS1C15 {
                 seri = true;
             }
         }
-
         if (seri) {
             System.out.println("\nTurnamen berakhir seri!");
         } else {
