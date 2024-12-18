@@ -36,12 +36,7 @@ public class UAS1C15 {
     }
 
     static boolean dataBelumAda() {
-        for (String nama : namaTim15) {
-            if (nama != null && !nama.isEmpty()) {
-                return false; 
-            }
-        }
-        return true; 
+        return namaTim15[0] == null;
     }
 
     static void inputDataSkor15() {
