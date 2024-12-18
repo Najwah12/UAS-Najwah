@@ -1,110 +1,129 @@
 import java.util.Scanner;
+public class UAS1C15 {
+    static Scanner input = new Scanner(System.in);
+    static int jumlahTim15 = (68 % 3) + 4; 
+    static String[] namaTim15 = new String[jumlahTim15];
+    static int[][] skorTim15 = new int[jumlahTim15][2];
+    static int[] totalSkor15 = new int[jumlahTim15];
 
-public class UAS1C15 { 
     public static void main(String[] args) {
-        Scanner input = new Scanner(System.in);
-
-        int jumlahTim = (68 % 3) + 4;
-        String[] namaTim15 = new String[jumlahTim];
-        int[][] skorTim15 = new int[jumlahTim][2];
-        int[] totalSkor = new int[jumlahTim];
-
         while (true) {
-            System.out.println("\n================================");
-            System.out.println("           MENU UTAMA           ");
-            System.out.println("================================");
+            System.out.println("\n=== MENU UTAMA ===");
             System.out.println("1. Input Data Skor Tim");
             System.out.println("2. Tampilkan Tabel Skor");
             System.out.println("3. Tentukan Juara");
             System.out.println("4. Keluar");
-
-            String pilihan;
-
-            while (true) {
-                System.out.print("\nPilih menu (1-4): ");
-                pilihan = input.nextLine();
-
-                if (pilihan.equals("1") || pilihan.equals("2") || pilihan.equals("3") || pilihan.equals("4")) {
-                    break;
-                } else {
-                    System.out.println("Pilihan menu tidak valid. Coba lagi!");
-                }
-            }
+            System.out.print("Pilih menu (1-4): ");
+            String pilihan = input.nextLine();
 
             if (pilihan.equals("1")) {
-                inputDataSkor(input, namaTim15, skorTim15, totalSkor, jumlahTim);
+                inputDataSkor15();
             } else if (pilihan.equals("2")) {
-                tampilkanTabelSkor(namaTim15, skorTim15, totalSkor, jumlahTim);
+                tampilkanTabelSkor15();
             } else if (pilihan.equals("3")) {
-                tentukanJuara(namaTim15, totalSkor, skorTim15, jumlahTim);
+                if (dataBelumAda()) {
+                    System.out.println("\nTidak ada data yang bisa ditampilkan.");
+                } else {
+                    tentukanJuara15();
+                }
             } else if (pilihan.equals("4")) {
                 System.out.println("\nTerima kasih telah menggunakan sistem turnamen!");
                 break;
+            } else {
+                System.out.println("Pilihan tidak valid. Coba lagi!");
             }
         }
     }
 
-    public static void inputDataSkor(Scanner input, String[] namaTim15, int[][] skorTim15, int[] totalSkor, int jumlahTim) {
-        for (int i = 0; i < jumlahTim; i++) {
-            System.out.print("Masukkan nama tim ke-" + (i + 1) + ": ");
+    static boolean dataBelumAda() {
+        for (String nama : namaTim15) {
+            if (nama != null && !nama.isEmpty()) {
+                return false; 
+            }
+        }
+        return true; 
+    }
+
+    static void inputDataSkor15() {
+        for (int i = 0; i < jumlahTim15; i++) {
+            System.out.print("\nMasukkan nama tim ke-" + (i + 1) + ": ");
             namaTim15[i] = input.nextLine();
-
-            for (int j = 0; j < 2; j++) { 
-                while (true) {
-                    System.out.print("Masukkan skor Level " + (j + 1) + " untuk " + namaTim15[i] + ": ");
-                    int skor = input.nextInt();
-                    if (skor < 0) {
-                        System.out.println("Skor tidak valid. Skor harus bilangan positif!");
-                    } else if (j == 0 && skor < 35) {
-                        System.out.println("Skor Level 1 kurang dari 35, dianggap 0.");
-                        skor = 0;
-                        skorTim15[i][j] = skor;
-                        break;
-                    } else {
-                        skorTim15[i][j] = skor;
-                        break;
-                    }
-                }
+            for (int j = 0; j < 2; j++) {
+                skorTim15[i][j] = masukkanSkor(namaTim15[i], j + 1);
             }
-            input.nextLine(); 
-            totalSkor[i] = skorTim15[i][0] + skorTim15[i][1];
+            totalSkor15[i] = skorTim15[i][0] + skorTim15[i][1];
         }
     }
 
-    public static void tampilkanTabelSkor(String[] namaTim15, int[][] skorTim15, int[] totalSkor, int jumlahTim) {
+    static int masukkanSkor(String namaTim15, int level) {
+        while (true) {
+            System.out.print("Masukkan skor " + namaTim15 + " untuk Level " + level + ": ");
+            if (input.hasNextInt()) {
+                int skor = input.nextInt();
+                input.nextLine();
+                if (skor < 0) {
+                    System.out.println("Skor tidak valid. Skor harus positif!");
+                } else if (level == 1 && skor < 35) {
+                    System.out.println("Skor Level 1 kurang dari 35, dianggap 0.");
+                    return 0;
+                } else {
+                    return skor;
+                }
+            } else {
+                System.out.println("Input tidak valid. Masukkan angka saja.");
+                input.nextLine(); 
+            }
+        }
+    }
+
+    static void tampilkanTabelSkor15() {
+        if (dataBelumAda()) {
+            System.out.println("\nTidak ada data yang bisa ditampilkan.");
+            return;
+        }
+
         System.out.println("\nTabel Skor Turnamen");
-        System.out.printf("%-10s%-10s%-10s%-10s\n", "Nama Tim", "Level 1", "Level 2", "Total Skor");
-        for (int i = 0; i < jumlahTim; i++) {
-            if (totalSkor[i] % 2 == 0) totalSkor[i] -= 15;
-            if (skorTim15[i][0] > 50 && skorTim15[i][1] > 50) totalSkor[i] += 13;
-            System.out.printf("%-10s%-10d%-10d%-10d\n", namaTim15[i], skorTim15[i][0], skorTim15[i][1], totalSkor[i]);
+        System.out.println("Nama Tim   Level 1   Level 2   Total Skor");
+        System.out.println("------------------------------------------");
+    
+        for (int i = 0; i < jumlahTim15; i++) {
+            String baris = formatKolom(namaTim15[i], 10) + 
+                           formatKolom(String.valueOf(skorTim15[i][0]), 8) + 
+                           formatKolom(String.valueOf(skorTim15[i][1]), 8) + 
+                           formatKolom(String.valueOf(totalSkor15[i]), 12);
+            System.out.println(baris);
         }
     }
 
-    public static void tentukanJuara(String[] namaTim15, int[] totalSkor, int[][] skorTim15, int jumlahTim) {
+    static String formatKolom(String teks, int lebar) {
+        if (teks.length() > lebar) {
+            return teks.substring(0, lebar - 1) + " ";
+        }
+        while (teks.length() < lebar) {
+            teks += " "; 
+        }
+        return teks;
+    }
+
+    static void tentukanJuara15() {
         int maxSkor = -1;
-        int juaraIndex = -1;
+        int juara = -1;
         boolean seri = false;
 
-        for (int i = 0; i < jumlahTim; i++) {
-            if (totalSkor[i] > maxSkor) {
-                maxSkor = totalSkor[i];
-                juaraIndex = i;
+        for (int i = 0; i < jumlahTim15; i++) {
+            if (totalSkor15[i] > maxSkor) {
+                maxSkor = totalSkor15[i];
+                juara = i;
                 seri = false;
-            } else if (totalSkor[i] == maxSkor) {
-                if (skorTim15[i][1] > skorTim15[juaraIndex][1]) {
-                    juaraIndex = i;
-                    seri = false;
-                } else if (skorTim15[i][1] == skorTim15[juaraIndex][1]) {
-                    seri = true;
-                }
+            } else if (totalSkor15[i] == maxSkor) {
+                seri = true;
             }
         }
 
         if (seri) {
-            System.out.println("\nTurnamen berakhir seri. Tim terbaik adalah [Nama Anda]");
+            System.out.println("\nTurnamen berakhir seri!");
         } else {
-            System.out.println("\nSelamat kepada Tim " + namaTim15[juaraIndex] + " yang telah memenangkan kompetisi!");
+            System.out.println("\nSelamat kepada Tim " + namaTim15[juara] + " yang telah memenangkan kompetisi!");
         }
     }
 }
